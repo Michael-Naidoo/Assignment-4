@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MovementPackage0._1
+namespace PlayerScripts
 {
     public class PlayerCam : MonoBehaviour
     {

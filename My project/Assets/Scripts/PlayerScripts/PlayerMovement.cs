@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-namespace MovementPackage0._1
+namespace PlayerScripts
 {
     public class PlayerMovement : MonoBehaviour
     {
-        [Header("Movement")] 
+         [Header("Movement")] 
         private float moveSpeed;
         public float walkSpeed;
         public float sprintSpeed;
