@@ -411,8 +411,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 7
   sprintSpeed: 10
-  groundDrag: 0.5
-  jumpForce: 0.4
+  groundDrag: 10
+  jumpForce: 5
   jumpCooldown: 0.5
   airMultiplier: 0.5
   readyToJump: 1
@@ -477,7 +477,7 @@ MonoBehaviour:
   orientation: {fileID: 796062080}
   playerObj: {fileID: 759798358}
   maxSlideTime: 0.5
-  slideForce: 10
+  slideForce: 14
   canSlide: 1
   slideYScale: 0.5
   slideKey: 306
@@ -632,6 +632,7 @@ GameObject:
   - component: {fileID: 1626204999}
   - component: {fileID: 1626204998}
   - component: {fileID: 1626204997}
+  - component: {fileID: 1626205000}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: Untagged
@@ -705,6 +706,21 @@ Transform:
   m_Father: {fileID: 1946687778}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1626205000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626204996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bade44b69ecc6634d9b08256231e8f81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensX: 400
+  sensY: 400
+  orientation: {fileID: 796062080}
 --- !u!1 &1946687776
 GameObject:
   m_ObjectHideFlags: 0
