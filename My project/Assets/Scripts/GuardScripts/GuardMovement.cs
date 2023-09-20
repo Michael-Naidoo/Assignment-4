@@ -1,18 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class GuardMovement : MonoBehaviour
+namespace GuardScripts
 {
-    // Start is called before the first frame update
-    void Start()
+    public class GuardMovement : MonoBehaviour
     {
-        
-    }
+        [Header("Input Data")]
+        [SerializeField] private GameObject target;
+        [SerializeField] private GameObject player;
+        [SerializeField] private NavMeshAgent navMesh;
+        [SerializeField] private GameObject[] targets;
+        [SerializeField] private float minDist;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [SerializeField] private int targetInArray;
+
+        private void Start()
+        {
+            targetInArray = 0;
+            player = GameObject.FindWithTag("Player");
+            navMesh = GetComponent<NavMeshAgent>();
+        }
+
+        private void FixedUpdate()
+        {
+            var distFromPlayer = Vector3.Distance(transform.position, player.transform.position);
+            if (distFromPlayer <= minDist)
+            {
+                target = player;
+            }
+            else
+            {
+                target = targets[targetInArray];
+            }
+            navMesh.destination = target.transform.position;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (targetInArray >= targets.Length - 1)
+            {
+                targetInArray = 0;
+            }
+            else
+            {
+                targetInArray++;
+            }
+        }
     }
 }
