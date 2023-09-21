@@ -20,6 +20,8 @@ namespace GuardScripts
         public float sprintDist;
 
         private PlayerMovement pm;
+        private PlayerUI pUI;
+        private Rigidbody rb;
 
         [SerializeField] private int targetInArray;
 
@@ -29,36 +31,46 @@ namespace GuardScripts
             player = GameObject.FindWithTag("Player");
             navMesh = GetComponent<NavMeshAgent>();
             pm = player.GetComponent<PlayerMovement>();
+            pUI = player.GetComponent<PlayerUI>();
+            rb = GetComponent<Rigidbody>();
         }
 
         private void FixedUpdate()
         {
-            if (pm.state == PlayerMovement.MovementState.crouching)
+            if (!pUI.pause)
             {
-                minDist = crouchDist;
+                if (pm.state == PlayerMovement.MovementState.crouching)
+                {
+                    minDist = crouchDist;
+                }
+                else if(pm.state == PlayerMovement.MovementState.sprinting)
+                {
+                    minDist = sprintDist;
+                }
+                else if (pm.state == PlayerMovement.MovementState.air)
+                {
+                    minDist = sprintDist;
+                }
+                else if (pm.state == PlayerMovement.MovementState.walking)
+                {
+                    minDist = walkDist;
+                }
+                var distFromPlayer = Vector3.Distance(transform.position, player.transform.position);
+                if (distFromPlayer <= minDist)
+                {
+                    target = player;
+                }
+                else
+                {
+                    target = targets[targetInArray];
+                }
+                navMesh.destination = target.transform.position;
             }
-            else if(pm.state == PlayerMovement.MovementState.sprinting)
+            else if (pUI.pause)
             {
-                minDist = sprintDist;
+                rb.velocity = Vector3.zero;
+                navMesh.destination = transform.position;
             }
-            else if (pm.state == PlayerMovement.MovementState.air)
-            {
-                minDist = sprintDist;
-            }
-            else if (pm.state == PlayerMovement.MovementState.walking)
-            {
-                minDist = walkDist;
-            }
-            var distFromPlayer = Vector3.Distance(transform.position, player.transform.position);
-            if (distFromPlayer <= minDist)
-            {
-                target = player;
-            }
-            else
-            {
-                target = targets[targetInArray];
-            }
-            navMesh.destination = target.transform.position;
         }
 
         private void OnTriggerEnter(Collider other)

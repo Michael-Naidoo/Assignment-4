@@ -54,6 +54,7 @@ namespace PlayerScripts
 
         private Rigidbody rb;
 
+        private PlayerUI pUI;
         public MovementState state;
         public enum MovementState
         {
@@ -72,6 +73,7 @@ namespace PlayerScripts
             rb.freezeRotation = true;
             startYScale = transform.localScale.y;
             speedBoostTimer = maxSpeedBoostTime;
+            pUI = GetComponent<PlayerUI>();
         }
 
         private void Update()
@@ -178,7 +180,7 @@ namespace PlayerScripts
             // calculate movement direction
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-            if (OnSlope() && !exitingSlope)
+            if (OnSlope() && !exitingSlope && !pUI.pause)
             {
                 rb.AddForce(GetSlopeMoveDirection(moveDirection) * (moveSpeed * 20f), ForceMode.Force);
 
@@ -187,13 +189,17 @@ namespace PlayerScripts
                     rb.AddForce(Vector3.down * 80f, ForceMode.Force);
                 }
             }
-            if(grounded)
+            if(grounded && !pUI.pause)
             {      
                 rb.AddForce(moveDirection.normalized * (moveSpeed * 10f), ForceMode.Force);
             }
-            else if(!grounded)
+            else if(!grounded && !pUI.pause)
             {
                 rb.AddForce(moveDirection.normalized * (moveSpeed * 10f * airMultiplier), ForceMode.Force);
+            }
+            else
+            {
+                rb.velocity = Vector3.zero;
             }
 
             rb.useGravity = !OnSlope();
