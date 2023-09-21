@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace PlayerScripts
@@ -38,6 +39,12 @@ namespace PlayerScripts
         public float maxSlopeAngle;
         private bool exitingSlope;
 
+        [Header("Speed Boost")]
+        private bool speedBoost;
+        public float speedBoostMultiplyer;
+        public float maxSpeedBoostTime;
+        private float speedBoostTimer;
+        
         public Transform orientation;
 
         private float horizontalInput;
@@ -53,14 +60,18 @@ namespace PlayerScripts
             walking,
             sprinting,
             crouching,
-            air
+            air,
+            speedBoost
         }
+
+        
 
         private void Start()
         {
             rb = GetComponent<Rigidbody>();
             rb.freezeRotation = true;
             startYScale = transform.localScale.y;
+            speedBoostTimer = maxSpeedBoostTime;
         }
 
         private void Update()
@@ -122,30 +133,44 @@ namespace PlayerScripts
 
         private void StateHandler()
         {
-            //crouching
-            if (Input.GetKey(crouchKey) && grounded)
+            if (!speedBoost)
             {
-                state = MovementState.crouching;
-                moveSpeed = crouchSpeed;
-            }
-            //sprinting
-            else if (grounded && Input.GetKey(sprintKey))
-            {
-                state = MovementState.sprinting;
-                moveSpeed = sprintSpeed;
-            }
+                //crouching
+                if (Input.GetKey(crouchKey) && grounded)
+                {
+                    state = MovementState.crouching;
+                    moveSpeed = crouchSpeed;
+                }
+                //sprinting
+                else if (grounded && Input.GetKey(sprintKey))
+                {
+                    state = MovementState.sprinting;
+                    moveSpeed = sprintSpeed;
+                }
             
-            //walking
-            else if (grounded)
-            {
-                state = MovementState.walking;
-                moveSpeed = walkSpeed;
-            }
+                //walking
+                else if (grounded)
+                {
+                    state = MovementState.walking;
+                    moveSpeed = walkSpeed;
+                }
             
-            //air
-            else
+                //air
+                else
+                {
+                    state = MovementState.air;
+                }
+            }
+            else if(speedBoost)
             {
-                state = MovementState.air;
+                state = MovementState.speedBoost;
+                moveSpeed = sprintSpeed * speedBoostMultiplyer;
+                speedBoostTimer -= Time.deltaTime;
+                if (speedBoostTimer < 0)
+                {
+                    speedBoost = false;
+                    speedBoostTimer = maxSpeedBoostTime;
+                }
             }
         }
         private void MovePlayer()
@@ -228,6 +253,15 @@ namespace PlayerScripts
         public Vector3 GetSlopeMoveDirection(Vector3 direction)
         {
             return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("PickUp"))
+            {
+                speedBoost = true;
+                Destroy(other.gameObject);
+            }
         }
     }
 }
