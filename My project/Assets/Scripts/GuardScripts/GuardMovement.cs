@@ -3,6 +3,7 @@ using PlayerScripts;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 namespace GuardScripts
 {
@@ -69,6 +70,14 @@ namespace GuardScripts
             else
             {
                 targetInArray++;
+            }
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
     }
