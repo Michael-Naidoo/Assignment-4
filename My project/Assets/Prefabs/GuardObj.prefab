@@ -117,7 +117,9 @@ MonoBehaviour:
   player: {fileID: 0}
   navMesh: {fileID: 0}
   targets: []
-  minDist: 20
+  crouchDist: 15
+  walkDist: 20
+  sprintDist: 25
   targetInArray: 0
 --- !u!195 &3952803098527667647
 NavMeshAgent:
